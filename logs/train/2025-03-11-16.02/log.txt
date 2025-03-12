@@ -1,0 +1,6 @@
+[Tue Mar 11 16:02:15 2025|train.py|INFO] lr:5e-05, epochs:150
+[Tue Mar 11 16:02:15 2025|train.py|INFO] Starting training unet_v2
+[Tue Mar 11 16:02:50 2025|train.py|INFO] lr:5e-05, epochs:150
+[Tue Mar 11 16:02:50 2025|train.py|INFO] lr:5e-05, epochs:150
+[Tue Mar 11 16:02:50 2025|train.py|INFO] Starting training unet_v2
+[Tue Mar 11 16:02:50 2025|train.py|INFO] Starting training unet_v2
