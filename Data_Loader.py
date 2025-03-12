@@ -16,12 +16,14 @@ class Images_Dataset_folder(torch.utils.data.Dataset):
         labels_dir = path of labeled images
         transformI = Input Images transformation (default: None)
         transformM = Input Labels transformation (default: None)
+        num_classes = Number of classes for one-hot encoding (default: 12)
+        one_hot = Whether to return labels as one-hot encoded (default: True)
     Output:
         tx = Transformed images
         lx = Transformed labels, note that the labels are converted to masks instead of RGB values
-        and the lables have been converted to one hot encoding"""
+        and the lables have been converted to one hot encoding if one_hot is True"""
 
-    def __init__(self, images_dir, labels_dir,transformI = None, transformM = None, num_classes=12):
+    def __init__(self, images_dir, labels_dir, transformI=None, transformM=None, num_classes=12, one_hot=True):
         self.images = sorted(os.listdir(images_dir))
         self.labels = sorted(os.listdir(labels_dir))
         self.images_dir = images_dir
@@ -29,6 +31,7 @@ class Images_Dataset_folder(torch.utils.data.Dataset):
         self.transformI = transformI
         self.transformM = transformM
         self.num_classes = num_classes
+        self.one_hot = one_hot
 
         if self.transformI:
             self.tx = self.transformI
@@ -45,7 +48,6 @@ class Images_Dataset_folder(torch.utils.data.Dataset):
             ])
 
     def __len__(self):
-
         return len(self.images)
 
     def __getitem__(self, i):
@@ -61,13 +63,13 @@ class Images_Dataset_folder(torch.utils.data.Dataset):
         img = self.tx(i1)
         label = np.array(l1, dtype=np.uint8)
         label = torch.tensor(label, dtype=torch.long)
+        
         # apply this seed to target/label tranfsorms  
         random.seed(seed) 
         torch.manual_seed(seed)
     
-        # Convert to one hot encoding
-        label = torch.nn.functional.one_hot(label.long(), num_classes= self.num_classes).permute(2, 0, 1).float()
+        # Convert to one hot encoding if one_hot is True
+        if self.one_hot:
+            label = torch.nn.functional.one_hot(label.long(), num_classes=self.num_classes).permute(2, 0, 1).float()
+        
         return img, label
-
-
-
